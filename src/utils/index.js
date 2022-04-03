@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
+
 export const isFalsy = (value) => (value === 0 ? false : !value);
+
 //删去对象中的空值
 //在函数中，改变传入的对象本身，不好
 export const cleanObject = (object) => {
@@ -11,4 +14,26 @@ export const cleanObject = (object) => {
     }
   });
   return result;
+};
+
+//抽离组件加载阶段只执行一次的逻辑
+export const useMount = (callback) => {
+  useEffect(() => {
+    callback();
+  }, []);
+};
+
+//把value转换成debouncedValue
+export const useDebounce = (value, delay) => {
+  //新建state，state是响应式的
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    //每次value变化，都新设一个定时器，在delay毫秒以后，才setDebouncedValue
+    const timeout = setTimeout(() => setDebouncedValue(value), delay);
+    //每次在上一个useEffect执行完再执行这个回调函数。最后一个timeout会被保留。
+    return () => clearTimeout(timeout);
+  }, [value, delay]);
+
+  return debouncedValue;
 };

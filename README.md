@@ -54,3 +54,10 @@ SearchPanel 组件<br>
 难点 4：**判断值是否是空值**（0 不为空值）：isFalsy()，undefined,null,NaN,''。<br>
 
 安装 yarn add qs，辅助 url 参数`name=${param.name}&personId=${param.personId}`的填写。qs.stringify()<br>
+
+难点 5：**自定义 hook**，提取组件逻辑，复用组件代码。<br>
+把在组件加载阶段只执行一次的逻辑抽离：useMount<br>
+**重难点：使用 useDebounce 减少搜索请求频率**。目标是把 value 转换成 debouncedValue。useDebounce 内部使用 useState，新建状态 debouncedValue。<br>
+_内部使用别的 hook，是因为要定义一个响应式的值，这是 state 的特点。用函数还是用 custom hook，区别就在于内部是否需要使用别的 hook。_<br>
+使用 useEffect。每次 value 变化，都新设一个定时器，在 delay 毫秒以后，才 setDebouncedValue 改变 debouncedValue 的值。return 一个清除定时器的回调，每次在上一个 useEffect 执行完会执行这个回调。最后一个 timeout 会被保留。<br>
+使用时，const debouncedParam = useDebounce(param, 2000);在 useEffect 中，将原来的 param 都改为 debouncedParam。debouncedParam 变化才调用。实现在搜索框输入文字时，无论触发多少次回调都只执行最后一次。2 秒内如多次调用函数即重新计时 2 秒，直到 2 秒内没有调用请求才执行函数<br>
