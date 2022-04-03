@@ -27,7 +27,7 @@ export const useMount = (callback: () => void) => {
 
 //把value转换成debouncedValue
 //需要用泛型规范类型
-export const useDebounce = (value: unknown, delay?: number): any => {
+export const useDebounce = <V>(value: V, delay?: number) => {
   //新建state，state是响应式的
   const [debouncedValue, setDebouncedValue] = useState(value);
 
