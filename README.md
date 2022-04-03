@@ -61,3 +61,13 @@ SearchPanel 组件<br>
 _内部使用别的 hook，是因为要定义一个响应式的值，这是 state 的特点。用函数还是用 custom hook，区别就在于内部是否需要使用别的 hook。_<br>
 使用 useEffect。每次 value 变化，都新设一个定时器，在 delay 毫秒以后，才 setDebouncedValue 改变 debouncedValue 的值。return 一个清除定时器的回调，每次在上一个 useEffect 执行完会执行这个回调。最后一个 timeout 会被保留。<br>
 使用时，const debouncedParam = useDebounce(param, 2000);在 useEffect 中，将原来的 param 都改为 debouncedParam。debouncedParam 变化才调用。实现在搜索框输入文字时，无论触发多少次回调都只执行最后一次。2 秒内如多次调用函数即重新计时 2 秒，直到 2 秒内没有调用请求才执行函数<br>
+
+## 三、改写成 ts
+
+使用 js，错误只能在运行时被发现。强类型语言 ts 在静态代码中就能找到错误。<br>
+interface,交代组件是怎么用的。对传入的参数进行类型定义<br>
+把 js 库转为 ts 库，对 qs 也进行类型判断。已添加@types/qs -D 依赖。开源库作者多选择用 js 写，再加一个 ts 补丁，如 index.d.ts 文件。d.ts 文件，可以让 js 文件继续保持 js 文件的身份而拥有 ts 的类型保护。如果全都用 ts 写，就不需要 d.ts 文件了。<br>
+delay?: number，该参数可有可无。<br>
+tuple，最常用的是 custom hook 的返回值。<br>
+unknown，严格版的 any。不能赋给任何值，也不能从上面读取任何方法。<br>
+泛型：
