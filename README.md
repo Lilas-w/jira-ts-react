@@ -71,3 +71,11 @@ delay?: number，该参数可有可无。<br>
 tuple，最常用的是 custom hook 的返回值。<br>
 unknown，严格版的 any。不能赋给任何值，也不能从上面读取任何方法。<br>
 泛型：定义时不知道什么类型会被传入。js 的 typeof tostring 都是在运行时才能判断类型的。泛型写法：在函数名后加<>，中写大写字母即泛型占位符，然后将占位符和传入的参数、返回的值绑定在一起。<br>
+
+## 四、JWT、用户认证、异步请求
+
+类型细节：ts 和 java 一样可以兼容类型。但 ts 是鸭子类型（duck typing），面向接口编程，不是面向对象编程。接口一样就可以兼容<br>
+
+写表单，通过 e.currentTarget.elements[0]、[1]获取表单中的数据 username password。<br>
+
+用 json-server 模拟自定义的 API。给 json-server 定义中间件，使其可模拟非标准 RESTful 的 API。使用 JWT 技术登录认证和注册。登录成功后返回一个 user，user 里有一个 token。将 middlewware 注入到 json-server 里："json-server": "json-server **json-server_mock**/db.json --watch --port 3001 --middlewares ./**json_server_mock**/middleware.js"<br>
