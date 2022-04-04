@@ -74,16 +74,30 @@ unknown，严格版的 any。不能赋给任何值，也不能从上面读取任
 
 ## 四、JWT、用户认证、异步请求
 
+### 1.ts 类型细节
+
 类型细节：ts 和 java 一样可以兼容类型。但 ts 是鸭子类型（duck typing），面向接口编程，不是面向对象编程。接口一样就可以兼容<br>
+
+### 2.搭建表单
 
 写表单，通过 e.currentTarget.elements[0]、[1]获取表单中的数据 username password。<br>
 
-用 json-server 模拟自定义的 API。给 json-server 定义中间件，使其可模拟非标准 RESTful 的 API。使用 JWT 技术登录认证和注册。登录成功后返回一个 user，user 里有一个 token。将 middlewware 注入到 json-server 里："json-server": "json-server **json-server_mock**/db.json --watch --port 3001 --middlewares ./**json_server_mock**/middleware.js"<br>
+### 3.用 json-server 模拟自定义的 API
 
-用开发者工具配置后端`npx imooc-jira-tool`：用 MSW 以 service worker 原理，实现分布式后端。[service worker-MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Service_Worker_API)<br>
+给 json-server 定义中间件，使其可模拟非标准 RESTful 的 API。使用 JWT 技术登录认证和注册。登录成功后返回一个 user，user 里有一个 token。将 middlewware 注入到 json-server 里："json-server": "json-server **json-server_mock**/db.json --watch --port 3001 --middlewares ./**json_server_mock**/middleware.js"<br>
+
+### 4.安装开发者工具
+
+连接到真实的服务器。
+`npx imooc-jira-tool`：用 MSW 以 service worker 原理，实现分布式后端。[service worker-MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Service_Worker_API)<br>
 
 1.  所有请求被 service worker 代理，后端逻辑处理后，以 localstorage 为数据库进行增删改查操作(而非用 mysql MongoDB)。开发者浏览器上都安装一个独立的后端服务和数据库，不受中心化服务的影响，点击“清空数据库”即可重置后端服务。
 2.  精准控制 http 请求的时间、失败概率、失败规则
 
 在 index.tsx 中引入 jira-dev-tool。<br>
 删去 json-server 的内容。<br>
+
+### 5.JWT 和用户认证
+
+JWT(JSON Web Tokens)，以 token 为核心。token 会被存到 localstorage 里。<br>
+新建 auth-provider.ts 以操纵 JWT 的 token。在真实环境中，如使用 firebase 等第三方 auth 服务，可以直接使用它们的 sdk，不用自己开发。<br>
