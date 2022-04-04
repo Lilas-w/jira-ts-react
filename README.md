@@ -84,5 +84,6 @@ unknown，严格版的 any。不能赋给任何值，也不能从上面读取任
 
 1.  所有请求被 service worker 代理，后端逻辑处理后，以 localstorage 为数据库进行增删改查操作(而非用 mysql MongoDB)。开发者浏览器上都安装一个独立的后端服务和数据库，不受中心化服务的影响，点击“清空数据库”即可重置后端服务。
 2.  精准控制 http 请求的时间、失败概率、失败规则
-    在 index.tsx 中引入 jira-dev-tool。<br>
-    删去 json-server 的内容。<br>
+
+在 index.tsx 中引入 jira-dev-tool。<br>
+删去 json-server 的内容。<br>
