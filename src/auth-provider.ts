@@ -21,6 +21,8 @@ export const login = (data: { username: string; password: string }) => {
   }).then(async (response: Response) => {
     if (response.ok) {
       return handleUserResponse(await response.json());
+    } else {
+      return Promise.reject(data);
     }
   });
 };
@@ -35,8 +37,12 @@ export const register = (data: { username: string; password: string }) => {
   }).then(async (response: Response) => {
     if (response.ok) {
       return handleUserResponse(await response.json());
+    } else {
+      return Promise.reject(data);
     }
   });
 };
 
-export const logout = () => window.localStorage.removeItem(localStorageKey);
+//加async之后一定返回一个promise,不存在void没有then方法的问题
+export const logout = async () =>
+  window.localStorage.removeItem(localStorageKey);

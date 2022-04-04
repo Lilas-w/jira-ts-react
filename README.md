@@ -74,19 +74,19 @@ unknown，严格版的 any。不能赋给任何值，也不能从上面读取任
 
 ## 四、JWT、用户认证、异步请求
 
-### 1.ts 类型细节
+#### 1.ts 类型细节
 
 类型细节：ts 和 java 一样可以兼容类型。但 ts 是鸭子类型（duck typing），面向接口编程，不是面向对象编程。接口一样就可以兼容<br>
 
-### 2.搭建表单
+#### 2.搭建表单
 
 写表单，通过 e.currentTarget.elements[0]、[1]获取表单中的数据 username password。<br>
 
-### 3.用 json-server 模拟自定义的 API
+#### 3.用 json-server 模拟自定义的 API
 
 给 json-server 定义中间件，使其可模拟非标准 RESTful 的 API。使用 JWT 技术登录认证和注册。登录成功后返回一个 user，user 里有一个 token。将 middlewware 注入到 json-server 里："json-server": "json-server **json-server_mock**/db.json --watch --port 3001 --middlewares ./**json_server_mock**/middleware.js"<br>
 
-### 4.安装开发者工具
+#### 4.安装开发者工具
 
 连接到真实的服务器。
 `npx imooc-jira-tool`：用 MSW 以 service worker 原理，实现分布式后端。[service worker-MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Service_Worker_API)<br>
@@ -97,7 +97,45 @@ unknown，严格版的 any。不能赋给任何值，也不能从上面读取任
 在 index.tsx 中引入 jira-dev-tool。<br>
 删去 json-server 的内容。<br>
 
-### 5.JWT 和用户认证
+#### 5.JWT 和用户认证
 
 JWT(JSON Web Tokens)，以 token 为核心。token 会被存到 localstorage 里。<br>
 新建 auth-provider.ts 以操纵 JWT 的 token。在真实环境中，如使用 firebase 等第三方 auth 服务，可以直接使用它们的 sdk，不用自己开发。<br>
+
+#### 6.使用 useContext 存储全局用户信息
+
+src/context/auth-context.tsx。并定义 custom hook：useAuth 以方便在别处使用全局变量。
+
+Point Free:把数据处理的过程定义成与数据无关的合成运算，不需要用到代表数据的那个参数，只要把简单的运算步骤合成到一起<br>
+
+对于不能将 xx 赋值给 undefined 的 ts 报错，使用泛型解决。如：
+
+```
+<{
+    user:User|null,
+    register:(form:Authform)=>Promise<void>,
+    login:(form:Authform)=>Promise<void>,
+    logout:()=>Promise<void>,
+} | undefined>
+```
+
+在 src/context/index.tsx 中，定义 AppProvider，整个项目根节点上的，把 App 包裹起来的，App 级别的 Provider 都会在这里添加。传入{children}，即包裹的子节点。<br>
+
+使用 useAuth。如在 login/index.tsx 中，可以删掉原先的：
+
+```
+const login = (param: { username: string; password: string }) => {
+    fetch(`${apiUrl}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(param),
+    }).then(async (response: Response) => {
+      if (response.ok) {
+      }
+    });
+  };
+```
+
+改为 const {login} = useAuth()。使用 useAuth 把 user 的信息全部取了出来，包括 token。
